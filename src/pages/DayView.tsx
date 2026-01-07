@@ -19,6 +19,8 @@ interface Writer {
   imageUrl: string;
 }
 
+const daysInMonth = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 const DayView = () => {
   const { monthNumber, dayNumber } = useParams<{ monthNumber: string; dayNumber: string }>();
   const navigate = useNavigate();
@@ -51,6 +53,25 @@ const DayView = () => {
     setWriters(writers.filter(w => w.id !== id));
   };
 
+  const getPreviousDay = () => {
+    if (day === 1) {
+      const prevMonth = month === 1 ? 12 : month - 1;
+      return { month: prevMonth, day: daysInMonth[prevMonth] };
+    }
+    return { month, day: day - 1 };
+  };
+
+  const getNextDay = () => {
+    if (day === daysInMonth[month]) {
+      const nextMonth = month === 12 ? 1 : month + 1;
+      return { month: nextMonth, day: 1 };
+    }
+    return { month, day: day + 1 };
+  };
+
+  const prevDay = getPreviousDay();
+  const nextDay = getNextDay();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -64,7 +85,7 @@ const DayView = () => {
             Назад к месяцу
           </Button>
 
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <span className="text-2xl font-heading font-bold text-primary">{day}</span>
@@ -79,13 +100,46 @@ const DayView = () => {
               </div>
             </div>
 
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setIsAdding(!isAdding)}
+                className="gap-2"
+                variant={isAdding ? "secondary" : "default"}
+              >
+                <Icon name={isAdding ? "X" : "Plus"} size={20} />
+                {isAdding ? 'Отмена' : 'Добавить'}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between mb-6 p-4 bg-card/50 rounded-lg border-2 border-border">
             <Button
-              onClick={() => setIsAdding(!isAdding)}
-              className="gap-2"
-              variant={isAdding ? "secondary" : "default"}
+              variant="outline"
+              onClick={() => navigate(`/day/${prevDay.month}/${prevDay.day}`)}
+              className="gap-2 hover-scale"
             >
-              <Icon name={isAdding ? "X" : "Plus"} size={20} />
-              {isAdding ? 'Отмена' : 'Добавить'}
+              <Icon name="ChevronLeft" size={20} />
+              <div className="text-left">
+                <div className="text-xs text-muted-foreground">Предыдущий день</div>
+                <div className="font-semibold">{prevDay.day} {monthNames[prevDay.month]}</div>
+              </div>
+            </Button>
+
+            <div className="hidden sm:flex items-center gap-2 text-muted-foreground">
+              <Icon name="BookMarked" size={20} />
+              <span className="text-sm">Навигация по дням</span>
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => navigate(`/day/${nextDay.month}/${nextDay.day}`)}
+              className="gap-2 hover-scale"
+            >
+              <div className="text-right">
+                <div className="text-xs text-muted-foreground">Следующий день</div>
+                <div className="font-semibold">{nextDay.day} {monthNames[nextDay.month]}</div>
+              </div>
+              <Icon name="ChevronRight" size={20} />
             </Button>
           </div>
         </div>
