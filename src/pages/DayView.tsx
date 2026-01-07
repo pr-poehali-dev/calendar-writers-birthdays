@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
+import { useAuth } from '@/contexts/AuthContext';
+import { AdminPanel } from '@/components/AdminPanel';
 
 const monthNames = [
   '', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
@@ -26,6 +28,7 @@ const STORAGE_KEY = 'writers-calendar';
 const DayView = () => {
   const { monthNumber, dayNumber } = useParams<{ monthNumber: string; dayNumber: string }>();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const month = parseInt(monthNumber || '1');
   const day = parseInt(dayNumber || '1');
   const dayKey = `${month}-${day}`;
@@ -104,15 +107,19 @@ const DayView = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <div className="mb-8 animate-fade-in">
+        <div className="flex justify-between items-start mb-6 animate-fade-in gap-4">
           <Button
             variant="ghost"
             onClick={() => navigate(`/month/${month}`)}
-            className="mb-6 gap-2"
+            className="gap-2"
           >
             <Icon name="ArrowLeft" size={20} />
             Назад к месяцу
           </Button>
+          <AdminPanel />
+        </div>
+
+        <div className="mb-8 animate-fade-in">
 
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <div className="flex items-center gap-4">
@@ -129,16 +136,18 @@ const DayView = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => setIsAdding(!isAdding)}
-                className="gap-2"
-                variant={isAdding ? "secondary" : "default"}
-              >
-                <Icon name={isAdding ? "X" : "Plus"} size={20} />
-                {isAdding ? 'Отмена' : 'Добавить'}
-              </Button>
-            </div>
+            {isAdmin && (
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => setIsAdding(!isAdding)}
+                  className="gap-2"
+                  variant={isAdding ? "secondary" : "default"}
+                >
+                  <Icon name={isAdding ? "X" : "Plus"} size={20} />
+                  {isAdding ? 'Отмена' : 'Добавить'}
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-between mb-6 p-4 bg-card/50 rounded-lg border-2 border-border">
@@ -231,12 +240,17 @@ const DayView = () => {
                 Пока нет записей
               </h3>
               <p className="text-muted-foreground mb-6 max-w-md">
-                Добавьте информацию о писателях, родившихся {day} {monthNames[month]}
+                {isAdmin 
+                  ? `Добавьте информацию о писателях, родившихся ${day} ${monthNames[month]}`
+                  : `Информация о писателях, родившихся ${day} ${monthNames[month]}, пока не добавлена`
+                }
               </p>
-              <Button onClick={() => setIsAdding(true)} className="gap-2">
-                <Icon name="Plus" size={20} />
-                Добавить первого писателя
-              </Button>
+              {isAdmin && (
+                <Button onClick={() => setIsAdding(true)} className="gap-2">
+                  <Icon name="Plus" size={20} />
+                  Добавить первого писателя
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}
@@ -274,14 +288,16 @@ const DayView = () => {
                         </div>
                       </div>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteWriter(writer.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Icon name="Trash2" size={20} />
-                      </Button>
+                      {isAdmin && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteWriter(writer.id)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Icon name="Trash2" size={20} />
+                        </Button>
+                      )}
                     </div>
 
                     {writer.info && (

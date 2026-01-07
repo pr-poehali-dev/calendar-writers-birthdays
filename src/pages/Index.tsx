@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { useNavigate } from 'react-router-dom';
+import { AdminPanel } from '@/components/AdminPanel';
 
 const months = [
   { name: 'Январь', number: 1 },
@@ -23,6 +24,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/30">
       <div className="container mx-auto px-4 py-12">
+        <div className="flex justify-end mb-6 animate-fade-in">
+          <AdminPanel />
+        </div>
+        
         <header className="text-center mb-16 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Icon name="BookOpen" size={48} className="text-primary" />
