@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { useNavigate } from 'react-router-dom';
 import { AdminPanel } from '@/components/AdminPanel';
@@ -82,6 +82,28 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             </Card>
           ))}
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <Card 
+            className="cursor-pointer hover:shadow-xl transition-shadow border-2 border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5"
+            onClick={() => navigate('/search')}
+          >
+            <CardContent className="p-8 flex items-center gap-6">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <Icon name="Search" size={32} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-heading font-bold text-foreground mb-2">
+                  Поиск писателей
+                </h3>
+                <p className="text-muted-foreground">
+                  Найдите писателя, статистика и фильтры по тегам
+                </p>
+              </div>
+              <Icon name="ArrowRight" size={24} className="text-primary ml-4" />
+            </CardContent>
+          </Card>
         </div>
 
         <footer className="mt-16 text-center text-muted-foreground">

@@ -1,0 +1,30 @@
+{
+  "tests": [
+    {
+      "name": "Get all writers",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create writer",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Александр Пушкин",
+        "info": "Великий русский поэт",
+        "imageUrl": "https://example.com/pushkin.jpg",
+        "month": 6,
+        "day": 6,
+        "tags": ["поэт", "классик"]
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "name": "Александр Пушкин"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
