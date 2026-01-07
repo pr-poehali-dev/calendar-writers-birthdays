@@ -35,6 +35,7 @@ const DayView = () => {
 
   const [writers, setWriters] = useState<Writer[]>([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [newWriter, setNewWriter] = useState({
     name: '',
     info: '',
@@ -83,6 +84,36 @@ const DayView = () => {
   const handleDeleteWriter = (id: string) => {
     const newWriters = writers.filter(w => w.id !== id);
     saveWriters(newWriters);
+  };
+
+  const handleEditWriter = (writer: Writer) => {
+    setEditingId(writer.id);
+    setNewWriter({
+      name: writer.name,
+      info: writer.info,
+      imageUrl: writer.imageUrl,
+    });
+    setIsAdding(true);
+  };
+
+  const handleUpdateWriter = () => {
+    if (newWriter.name.trim() && editingId) {
+      const newWriters = writers.map(w => 
+        w.id === editingId 
+          ? { ...w, ...newWriter }
+          : w
+      );
+      saveWriters(newWriters);
+      setNewWriter({ name: '', info: '', imageUrl: '' });
+      setIsAdding(false);
+      setEditingId(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setNewWriter({ name: '', info: '', imageUrl: '' });
+    setIsAdding(false);
+    setEditingId(null);
   };
 
   const getPreviousDay = () => {
@@ -139,7 +170,7 @@ const DayView = () => {
             {isAdmin && (
               <div className="flex items-center gap-2">
                 <Button
-                  onClick={() => setIsAdding(!isAdding)}
+                  onClick={() => isAdding ? handleCancelEdit() : setIsAdding(true)}
                   className="gap-2"
                   variant={isAdding ? "secondary" : "default"}
                 >
@@ -186,8 +217,8 @@ const DayView = () => {
           <Card className="mb-8 animate-fade-in border-2 border-primary/20 bg-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading">
-                <Icon name="UserPlus" size={24} />
-                Новый писатель
+                <Icon name={editingId ? "Edit" : "UserPlus"} size={24} />
+                {editingId ? 'Редактировать писателя' : 'Новый писатель'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -222,9 +253,12 @@ const DayView = () => {
                 />
               </div>
 
-              <Button onClick={handleAddWriter} className="w-full gap-2">
+              <Button 
+                onClick={editingId ? handleUpdateWriter : handleAddWriter} 
+                className="w-full gap-2"
+              >
                 <Icon name="Check" size={20} />
-                Сохранить писателя
+                {editingId ? 'Обновить' : 'Сохранить писателя'}
               </Button>
             </CardContent>
           </Card>
@@ -289,14 +323,24 @@ const DayView = () => {
                       </div>
 
                       {isAdmin && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteWriter(writer.id)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Icon name="Trash2" size={20} />
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditWriter(writer)}
+                            className="text-primary hover:text-primary"
+                          >
+                            <Icon name="Edit" size={20} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteWriter(writer.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Icon name="Trash2" size={20} />
+                          </Button>
+                        </div>
                       )}
                     </div>
 
