@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,11 +21,14 @@ interface Writer {
 
 const daysInMonth = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+const STORAGE_KEY = 'writers-calendar';
+
 const DayView = () => {
   const { monthNumber, dayNumber } = useParams<{ monthNumber: string; dayNumber: string }>();
   const navigate = useNavigate();
   const month = parseInt(monthNumber || '1');
   const day = parseInt(dayNumber || '1');
+  const dayKey = `${month}-${day}`;
 
   const [writers, setWriters] = useState<Writer[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -35,22 +38,48 @@ const DayView = () => {
     imageUrl: '',
   });
 
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const allData = JSON.parse(stored);
+        setWriters(allData[dayKey] || []);
+      } catch (e) {
+        console.error('Error loading writers:', e);
+      }
+    }
+  }, [dayKey]);
+
+  const saveWriters = (newWriters: Writer[]) => {
+    setWriters(newWriters);
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const allData = stored ? JSON.parse(stored) : {};
+      allData[dayKey] = newWriters;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+    } catch (e) {
+      console.error('Error saving writers:', e);
+    }
+  };
+
   const handleAddWriter = () => {
     if (newWriter.name.trim()) {
-      setWriters([
+      const newWriters = [
         ...writers,
         {
           id: Date.now().toString(),
           ...newWriter,
         },
-      ]);
+      ];
+      saveWriters(newWriters);
       setNewWriter({ name: '', info: '', imageUrl: '' });
       setIsAdding(false);
     }
   };
 
   const handleDeleteWriter = (id: string) => {
-    setWriters(writers.filter(w => w.id !== id));
+    const newWriters = writers.filter(w => w.id !== id);
+    saveWriters(newWriters);
   };
 
   const getPreviousDay = () => {
