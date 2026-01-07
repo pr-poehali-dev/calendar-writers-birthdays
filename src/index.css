@@ -1,54 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 35 40% 96%;
+    --foreground: 25 30% 20%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 35 50% 98%;
+    --card-foreground: 25 30% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 35 50% 98%;
+    --popover-foreground: 25 30% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 25 50% 35%;
+    --primary-foreground: 35 40% 96%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 40 35% 85%;
+    --secondary-foreground: 25 30% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 40 30% 90%;
+    --muted-foreground: 25 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 43 70% 55%;
+    --accent-foreground: 25 30% 20%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 35 40% 96%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 35 25% 85%;
+    --input: 35 25% 85%;
+    --ring: 25 50% 35%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 35 40% 96%;
+    --sidebar-foreground: 25 30% 25%;
+    --sidebar-primary: 25 50% 35%;
+    --sidebar-primary-foreground: 35 40% 96%;
+    --sidebar-accent: 40 35% 88%;
+    --sidebar-accent-foreground: 25 30% 25%;
+    --sidebar-border: 35 25% 85%;
+    --sidebar-ring: 43 70% 55%;
   }
 
   .dark {
@@ -97,5 +92,15 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Merriweather", serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Cormorant", serif;
   }
 }
