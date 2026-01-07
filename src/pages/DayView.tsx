@@ -3,11 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdminPanel } from '@/components/AdminPanel';
+import RichTextEditor from '@/components/RichTextEditor';
 
 const monthNames = [
   '', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
@@ -234,12 +234,10 @@ const DayView = () => {
 
               <div>
                 <Label htmlFor="info">Информация о писателе</Label>
-                <Textarea
-                  id="info"
-                  placeholder="Краткая биография, известные произведения..."
-                  rows={4}
+                <RichTextEditor
                   value={newWriter.info}
-                  onChange={(e) => setNewWriter({ ...newWriter, info: e.target.value })}
+                  onChange={(value) => setNewWriter({ ...newWriter, info: value })}
+                  placeholder="Краткая биография, известные произведения..."
                 />
               </div>
 
@@ -345,9 +343,10 @@ const DayView = () => {
                     </div>
 
                     {writer.info && (
-                      <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                        {writer.info}
-                      </p>
+                      <div 
+                        className="text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: writer.info }}
+                      />
                     )}
                   </div>
                 </div>
