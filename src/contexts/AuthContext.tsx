@@ -8,7 +8,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const ADMIN_PASSWORD = 'литература2026';
+const ADMIN_PASSWORD = 'книжныйМир2026';
 const AUTH_KEY = 'writers-calendar-auth';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
